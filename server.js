@@ -6,8 +6,13 @@ import dotenv from "dotenv";
 
 // routes file
 import rootRoute from "./routes/root.js";
+import connectDatabase from "./config/db.js";
+
 // dotenv config
 dotenv.config();
+
+// database connection
+connectDatabase();
 
 const app = express();
 
@@ -29,3 +34,5 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`APP is running on port ${PORT}`.bgMagenta.black);
 });
+
+//fizz.oncemore
