@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 // routes file
 import rootRoute from "./routes/root.js";
+import userRoutes from "./routes/user.routes.js";
 import connectDatabase from "./config/db.js";
 
 // dotenv config
@@ -21,14 +22,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
+//routes
 app.use("/", rootRoute);
+app.use("/api/v1/user", userRoutes);
 
-app.get("/", (req, res) => {
-    return res.status(200).send({
-        success: "OK",
-        message: "Hello World",
-    });
-});
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
