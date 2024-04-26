@@ -4,6 +4,8 @@ import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes.js";
+import cookieParser from "cookie-parser";
+
 // routes file
 import connectDatabase from "./config/db.js";
 
@@ -19,14 +21,17 @@ export const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
-
+app.use(cookieParser());
 //routes
 app.use("/api/v1/user", userRoutes);
 
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
-    console.log(`APP is running on port ${PORT}`.bgMagenta.black);
+    console.log(
+        `APP is running on port ${PORT} on ${process.env.NODE_ENV}`.bgMagenta
+            .black
+    );
 });
 
 //fizz.oncemore

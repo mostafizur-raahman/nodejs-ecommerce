@@ -88,24 +88,35 @@ export const loginController = async (req, res) => {
         // check user
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).send({
-                success: false,
-                message: "Please rigister first to login",
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "user not found",
             });
         }
 
         // check password is valid
         const isPassValid = await user.comparePassword(password);
         if (!isPassValid) {
-            return res.status(500).send({
-                success: false,
+            return errorResponse(res, {
+                statusCode: 500,
                 message: "Invalid credentials",
             });
         }
-        res.status(200).send({
+        // projections
+        const { password: _, ...userWithoutPassword } = user.toObject();
+
+        //JWT
+        const token = user.generateJWT();
+        userWithoutPassword.token = token;
+        res.cookie("token", token, {
+            httpOnly: true, // Ensure cookie is only accessible via HTTP(S)
+            secure: true,
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        });
+        res.status(200).json({
             success: true,
-            message: "user login successfully",
-            user,
+            message: "user login succesfully",
+            userWithoutPassword,
         });
     } catch (error) {
         console.log(error);
@@ -115,3 +126,24 @@ export const loginController = async (req, res) => {
         });
     }
 };
+
+// get user
+export const getUserController = async (req, res) => {
+    try {
+        const allUser = await User.find();
+        console.log(allUser, "---");
+        return successResponse(res, {
+            statusCode: 200,
+            message: "User fetched succefully",
+            payload: allUser,
+        });
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to get user, try again later",
+        });
+    }
+};
+
+// update user
