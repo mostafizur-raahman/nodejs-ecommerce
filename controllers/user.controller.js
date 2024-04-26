@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
 
+import { successResponse, errorResponse } from "../helpers/responseHandler.js";
+
 // for rgister
 export const registerController = async (req, res) => {
     try {
@@ -32,9 +34,7 @@ export const registerController = async (req, res) => {
         }
 
         // existing user checking
-        const existingUser = await User.findOne({
-            email,
-        });
+        const existingUser = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(500).send({
@@ -42,7 +42,8 @@ export const registerController = async (req, res) => {
                 message: "Email already exists",
             });
         }
-        const user = await User.create({
+
+        const _doc = {
             name,
             email,
             password,
@@ -51,19 +52,22 @@ export const registerController = async (req, res) => {
             country,
             phone,
             profilePicture,
-        });
+        };
 
-        res.status(200).send({
-            success: true,
-            message: "user regitser successfully",
-            user,
+        const user = await User.create(_doc);
+
+        return successResponse(res, {
+            statusCode: 200,
+            message: "user creaated succesfully",
+            payload: {
+                user,
+            },
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
-            success: false,
-            message: `Error in register api `,
-            error: error,
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "user created failed",
         });
     }
 };
@@ -105,10 +109,9 @@ export const loginController = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
-            success: false,
-            message: `Error in login api`,
-            error: error,
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to login, try again later",
         });
     }
 };
