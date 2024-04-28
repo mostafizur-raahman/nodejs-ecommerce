@@ -134,7 +134,7 @@ export const getUserController = async (req, res) => {
         console.log(allUser, "---");
         return successResponse(res, {
             statusCode: 200,
-            message: "User fetched succefully",
+            message: "User fetched successfully",
             payload: allUser,
         });
     } catch (error) {
@@ -147,3 +147,45 @@ export const getUserController = async (req, res) => {
 };
 
 // update user
+export const updateUserController = async (req, res) => {
+    try {
+        const userId = req.query.id;
+
+        console.log(us);
+        if (!userId) {
+            return errorResponse(res, {
+                statusCode: 400,
+                message: "User ID is missing in the request",
+            });
+        }
+
+        // Find the user by id
+        const user = await User.findById(userId);
+
+        // Check if the user exists
+        if (!user) {
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "User not found",
+            });
+        }
+
+        const { name, profilePicture } = req.body;
+
+        if (name) user.name = name;
+        if (profilePicture) user.profilePicture = profilePicture;
+
+        await user.save();
+
+        return successResponse(res, {
+            statusCode: 200,
+            message: "User update successfully",
+        });
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to get user, try again later",
+        });
+    }
+};

@@ -42,8 +42,16 @@ const userSchema = new mongoose.Schema(
 );
 
 // hash function
-userSchema.pre("save", async function () {
-    this.password = await bcrypt.hash(this.password, 10);
+userSchema.pre("save", async function (next) {
+    // if pass is not modifies
+    if (!this.isModified("password")) return next();
+
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+        next(); // Call next to pass control to the next middleware
+    } catch (error) {
+        next(error); // Pass any error to the next middleware
+    }
 });
 
 // compare function for login
