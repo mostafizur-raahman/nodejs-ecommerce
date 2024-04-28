@@ -141,6 +141,7 @@ export const deleteProductControllers = async (req, res) => {
         return successResponse(res, {
             statusCode: 200,
             message: "User deleted successfully",
+            payload: updateProduct,
         });
     } catch (error) {
         return errorResponse(res, {
