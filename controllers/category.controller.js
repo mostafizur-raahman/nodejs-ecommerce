@@ -78,3 +78,34 @@ export const deleteCategoryControllers = async (req, res) => {
         });
     }
 };
+
+export const updateCategoryControllers = async (req, res) => {
+    try {
+        const categoryid = req.query.id;
+        const { name } = req.body;
+
+        const updateCategory = await Category.findOneAndUpdate(
+            { _id: categoryid },
+            { name: name },
+            { new: true }
+        );
+
+        if (!updateCategory) {
+            return errorResponse(res, {
+                statusCode: 500,
+                message:
+                    "ctegory not found with this id, try another id to delete this",
+            });
+        }
+        return successResponse(res, {
+            statusCode: 200,
+            message: "category deleted successfully",
+            payload: updateCategory,
+        });
+    } catch (error) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to update product, try again later",
+        });
+    }
+};

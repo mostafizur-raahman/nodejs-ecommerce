@@ -6,12 +6,7 @@ import { defaultProjection } from "../helpers/defaultProjections.js";
 export const getAllProductsControllers = async (req, res) => {
     try {
         const products = await Product.find({}, defaultProjection);
-        // if (!products) {
-        //     return errorResponse(res, {
-        //         statusCode: 404,
-        //         message: "Products not found",
-        //     });
-        // }
+
         return successResponse(res, {
             statusCode: 200,
             message: "Product fetched successfully",
@@ -53,7 +48,8 @@ export const getSingleProducControllers = async (req, res) => {
 
 export const createProductControllers = async (req, res) => {
     try {
-        const { name, description, price, category, stock, image } = req.body;
+        const { name, description, price, category, stock, image, quantity } =
+            req.body;
 
         if (!name || !price || !stock) {
             return errorResponse(res, {
@@ -69,6 +65,7 @@ export const createProductControllers = async (req, res) => {
             category,
             stock,
             image,
+            quantity,
         };
 
         const product = await Product.create({ ...obj });
@@ -141,8 +138,7 @@ export const deleteProductControllers = async (req, res) => {
 
         return successResponse(res, {
             statusCode: 200,
-            message: "User deleted successfully",
-            payload: updateProduct,
+            message: "product deleted successfully",
         });
     } catch (error) {
         return errorResponse(res, {
