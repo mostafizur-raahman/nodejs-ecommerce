@@ -4,6 +4,7 @@ import {
     deleteProductControllers,
     getAllProductsControllers,
     getSingleProducControllers,
+    sortProductsControllers,
     updateProductControllers,
 } from "../controllers/product.controller.js";
 
@@ -14,4 +15,6 @@ router.get("/single-product", getSingleProducControllers);
 router.post("/create-product", createProductControllers);
 router.patch("/update-product", updateProductControllers);
 router.delete("/delete-product", deleteProductControllers);
+// sort products
+router.get("/sort-products", sortProductsControllers);
 export default router;

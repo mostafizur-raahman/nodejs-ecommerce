@@ -147,3 +147,25 @@ export const deleteProductControllers = async (req, res) => {
         });
     }
 };
+
+// sorting products ascending and descending
+export const sortProductsControllers = async (req, res) => {
+    try {
+        const sort = req.query.sort;
+        const products = await Product.find({}, defaultProjection).sort({
+            price: sort,
+        });
+
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Product fetched successfully",
+            payload: products,
+        });
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to get products, try again later",
+        });
+    }
+};

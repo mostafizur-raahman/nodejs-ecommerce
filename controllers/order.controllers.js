@@ -50,3 +50,22 @@ export const createOrderControllers = async (req, res) => {
         });
     }
 };
+
+// get order
+export const getOrdersControllers = async (req, res) => {
+    try {
+        const orders = await Order.find();
+
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Orders fetched successfully",
+            payload: orders,
+        });
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Failed to get orders, try again later",
+        });
+    }
+};
