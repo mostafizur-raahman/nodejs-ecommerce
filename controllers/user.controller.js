@@ -130,7 +130,7 @@ export const loginController = async (req, res) => {
 // get user
 export const getUserController = async (req, res) => {
     try {
-        const allUser = await User.find();
+        const allUser = await User.find({});
         console.log(allUser, "---");
         return successResponse(res, {
             statusCode: 200,

@@ -1,10 +1,11 @@
 import Product from "../models/product.model.js";
 import { successResponse, errorResponse } from "../helpers/responseHandler.js";
+import { defaultProjection } from "../helpers/defaultProjections.js";
 
 // GET all products
 export const getAllProductsControllers = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Product.find({}, defaultProjection);
         // if (!products) {
         //     return errorResponse(res, {
         //         statusCode: 404,
@@ -28,7 +29,7 @@ export const getAllProductsControllers = async (req, res) => {
 export const getSingleProducControllers = async (req, res) => {
     try {
         const id = req.query.id;
-        const product = await Product.findById(id);
+        const product = await Product.findById(id, defaultProjection);
 
         // if (!product) {
         //     return errorResponse(res, {

@@ -1,14 +1,23 @@
+import { defaultProjection } from "../helpers/defaultProjections.js";
 import { errorResponse, successResponse } from "../helpers/responseHandler.js";
 import Category from "../models/category.model.js";
 
 export const createCategoryControllers = async (req, res) => {
     try {
         const { category } = req.body;
-        console.log(category);
         if (!category) {
             return errorResponse(res, {
                 statusCode: 500,
                 message: "category field is required",
+            });
+        }
+
+        const existingCategory = await Category.findOne({ category });
+
+        if (existingCategory) {
+            return errorResponse(res, {
+                statusCode: 400,
+                message: "Category already exists",
             });
         }
         const _doc = await Category.create({ category });
@@ -28,7 +37,7 @@ export const createCategoryControllers = async (req, res) => {
 
 export const getAllCategoryControllers = async (req, res) => {
     try {
-        const allCategory = await Category.find({});
+        const allCategory = await Category.find({}, defaultProjection);
 
         return successResponse(res, {
             statusCode: 200,
